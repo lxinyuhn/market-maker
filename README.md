@@ -1,3 +1,12 @@
+# 修改为在控制台输入私钥:
+   由于在配置文件配置私钥,在云服务器容易泄露私钥,不太安全
+   
+   在环境变量导入私钥,从历史记录也可以查看,也不是很安全
+   
+   在控制台输入私钥就算计算机被入侵,也没有私钥留存,也没有私钥输入痕迹,相对安全
+   
+   暂时只做了一组私钥的输入,如果需要多组的,稍微改下代码就好了.
+   
 # Zigzag Market Maker
 
 This is the reference market maker for Zigzag zksync markets. It works on both Rinkeby and Mainnet.
