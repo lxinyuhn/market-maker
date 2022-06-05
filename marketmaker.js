@@ -4,8 +4,26 @@ import ethers from 'ethers';
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
 import fs from 'fs';
+import readline from 'readline';
 
 dotenv.config();
+
+function sleep(time){
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+  
+rl._writeToOutput = function _writeToOutput(stringToWrite) {
+    if (rl.stdoutMuted)
+    rl.output.write("*");
+    else
+    rl.output.write(stringToWrite);
+};
+
 
 // Globals
 const PRICE_FEEDS = {};
@@ -56,12 +74,26 @@ if(providerUrl && ETH_NETWORK=="mainnet") {
 
 // Start price feeds
 await setupPriceFeeds();
+let ethPrivKey = "";
+console.log("input your wallet key:")
+rl.stdoutMuted = true;
+rl.question("", function(key) {
+    rl.stdoutMuted = false;
+    // console.log("your wallet key:", key);
+    ethPrivKey = key;
+    rl.history = rl.history.slice(1);
+    rl.close();
+});
 
+while (!ethPrivKey){
+    await sleep(1000);
+}
+console.log("exec:......")
 let syncProvider;
 try {
     syncProvider = await zksync.getDefaultProvider(ETH_NETWORK);
     const keys = [];
-    const ethPrivKey = (process.env.ETH_PRIVKEY || MM_CONFIG.ethPrivKey);
+    // const ethPrivKey = (process.env.ETH_PRIVKEY || MM_CONFIG.ethPrivKey);
     if(ethPrivKey && ethPrivKey != "") { keys.push(ethPrivKey);  }
     let ethPrivKeys;
     if (process.env.ETH_PRIVKEYS) {
@@ -922,4 +954,3 @@ async function updateAccountState() {
         // pass
     }
 }
-
